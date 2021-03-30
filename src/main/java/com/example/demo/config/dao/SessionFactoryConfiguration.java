@@ -14,28 +14,37 @@ import java.io.IOException;
 
 @Configuration
 public class SessionFactoryConfiguration {
+
+    private static String mybatisConfigFile;
+
     @Value("${mybatis_config_file}")
-    private String mybatisConfigFilePath;
+    public void setMybatisConfigFile(String mybatisConfigFile) {
+        SessionFactoryConfiguration.mybatisConfigFile = mybatisConfigFile;
+    }
+
+    private static String mapperPath;
 
     @Value("${mapper_path}")
-    private String mapperPath;
-
-    @Autowired
-    @Qualifier("dataSource")
-    private DataSource dataSource;
+    public void setMapperPath(String mapperPath) {
+        SessionFactoryConfiguration.mapperPath = mapperPath;
+    }
 
     @Value("${type_alias_package}")
-    private String entityPackage;
+    private String typeAliasPackage;
+
+    @Autowired
+    private DataSource dataSource;
+
 
     @Bean(name = "sqlSessionFactory")
     public SqlSessionFactoryBean createSqlSessionFactoryBean() throws IOException {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setConfigLocation(new ClassPathResource(mybatisConfigFilePath));
+        sqlSessionFactoryBean.setConfigLocation(new ClassPathResource(mybatisConfigFile));
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         String packageSearchPath = PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + mapperPath;
         sqlSessionFactoryBean.setMapperLocations(resolver.getResources(packageSearchPath));
         sqlSessionFactoryBean.setDataSource(dataSource);
-        sqlSessionFactoryBean.setTypeAliasesPackage(entityPackage);
+        sqlSessionFactoryBean.setTypeAliasesPackage(typeAliasPackage);
         return sqlSessionFactoryBean;
     }
 }

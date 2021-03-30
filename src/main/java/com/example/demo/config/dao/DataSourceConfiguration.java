@@ -27,7 +27,7 @@ public class DataSourceConfiguration {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         dataSource.setDriverClass(jdbcDriver);
         dataSource.setJdbcUrl(jdbcUrl);
-        dataSource.setDataSourceName(jdbcUserName);
+        dataSource.setUser(jdbcUserName);
         dataSource.setPassword(jdbcPassword);
         //关闭连接池不自动commit
         dataSource.setAutoCommitOnClose(false);
